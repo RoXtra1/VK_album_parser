@@ -124,3 +124,17 @@ def file_work(file_name: str):
                 sub_dir = '\\' + line[1:]
             else:  # если название раздела
                 base_dir = '\\' + line
+
+
+def main():
+    if VK:
+        ans = int(input('Выбери способ ввода:\n0 - вставить ссылку\n1 - читать список ссылок из файла\n->'))
+        if ans == 0:
+            link = input('Вставь ссылку на альбом: ')
+            link_read(link, ROOT)
+        else:
+            file = input('Вставь название файла или путь к нему: ')
+            file_work(file)
+    else:
+        print("Не авторизован :( Попробуй еще раз")
+    print('Загрузка завершена')
