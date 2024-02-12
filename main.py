@@ -51,7 +51,7 @@ def link_read(link: str, path: str):
 
     photos_count = album['size']
 
-    album_dir = f"{path}\\{album['title'].rstrip('.').replace('/', '-')}"  # в названии папок нельзя использовать . и /
+    album_dir = f"{path}\\{album['title'].rstrip('.').replace('/', '-')}"  # В названии папок нельзя использовать . и /
     if not os.path.exists(album_dir):
         os.mkdir(album_dir)
 
@@ -63,7 +63,7 @@ def link_read(link: str, path: str):
         try:
             photos = VK.photos.get(owner_id=group_id, album_id=album_id, count=1000,
                                    offset=j * 1000)['items']  # Получаем 1000 фото
-        except requests.exceptions.ConnectionError:  # на случай, если фото больше 1000
+        except requests.exceptions.ConnectionError:  # на случай, если фото больше 1000 и между подходами был дисконект
             print('Переподключение...')
             VK = authorization()  # повторная авторизация
             photos = VK.photos.get(owner_id=group_id, album_id=album_id, count=1000,
@@ -112,11 +112,11 @@ def file_work(file_name: str):
             res.append(content[start:])
         content[i] = content[i].rstrip()  # очистка от знаков переноса строки
 
-    for dir in res:  # проходимся по каждому разделу
+    for dr in res:  # проходимся по каждому разделу
         base_dir = ''
         sub_dir = ''
 
-        for line in dir:  # затем по каждой линии в разделе
+        for line in dr:  # затем по каждой линии в разделе
             if line.startswith('http'):  # если ссылка
                 path = f'{ROOT}{base_dir}{sub_dir}'
                 link_read(line, path)
@@ -138,3 +138,11 @@ def main():
     else:
         print("Не авторизован :( Попробуй еще раз")
     print('Загрузка завершена')
+
+
+if __name__ == "__main__":
+    config = create_config()
+    TOKEN = config.get("Configuration", "Token")
+    ROOT = config.get("Configuration", "Root")
+    VK = authorization()
+    main()
